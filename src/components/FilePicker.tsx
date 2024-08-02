@@ -1,10 +1,11 @@
 import React from 'react'
 import CustomButton from './CustomButton'
+import { DecalKey } from '@/config/constants'
 
 type Props = {
   file: File | null,
   setFile: React.Dispatch<React.SetStateAction<File | null>>,
-  readFile: (val: string) => void
+  readFile: (val: DecalKey) => void
 }
 
 const FilePicker = ({ file, setFile, readFile}: Props) => {

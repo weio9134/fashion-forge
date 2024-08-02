@@ -1,12 +1,12 @@
 import React from 'react'
-import axios from 'axios'
 import CustomButton from './CustomButton'
+import { DecalKey } from '@/config/constants'
 
 type Props = {
   prompt: string,
   setPrompt: React.Dispatch<React.SetStateAction<string>>,
   generating: boolean,
-  handleSubmit: (val: string) => void
+  handleSubmit: (val: DecalKey) => void
 }
 
 const AIPicker = ({ prompt, setPrompt, generating, handleSubmit }: Props) => {

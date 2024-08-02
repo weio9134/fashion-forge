@@ -1,24 +1,18 @@
 "use client"
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useSnapshot } from 'valtio'
-import state from '@/store'
-import config from '@/config/config'
-import { downloadCanvasToImage, reader } from '@/config/helpers'
-import { EditorTabs, FilterTabs, DecalTypes } from '@/config/constants'
+import state, { StateProp } from '@/store'
+import { reader } from '@/config/helpers'
+import { EditorTabs, FilterTabs, DecalTypes, DecalKey, FilterKey } from '@/config/constants'
 import { fadeAnimation, slideAnimation } from '@/config/motion'
 import AIPicker from '@/components/AIPicker'
 import ColorPicker from '@/components/ColorPicker'
 import CustomButton from '@/components/CustomButton'
 import CustomTab from '@/components/CustomTab'
 import FilePicker from '@/components/FilePicker'
-import { stylishShirt } from '../../../../public/assets'
 import axios from 'axios'
 
-type DecalProp = { 
-  stateProperty: string; 
-  filterTab: string;
-}
 
 const Customizer = () => {
   const snap = useSnapshot(state);
@@ -44,7 +38,7 @@ const Customizer = () => {
     }
   }
 
-  const handleSubmit = async (type: string) => {
+  const handleSubmit = async (type: DecalKey) => {
     if(!prompt) return alert("Please enter a prompt");
 
     try {
@@ -62,16 +56,17 @@ const Customizer = () => {
     }
   }
 
-  const handleDecals = (type: string, result: any) => {
-    const decalType: DecalProp = DecalTypes[type]
-
-    state[decalType.stateProperty] = result
-
-    if(!activeFilterTab[decalType.filterTab]) 
-      handleActiveFilterTab(decalType.filterTab)
+  const handleDecals = (type: DecalKey, result: any) => {
+    const decalType = DecalTypes[type];
+  
+    state[decalType.stateProperty] = result as StateProp[typeof decalType.stateProperty];
+  
+    if (!activeFilterTab[decalType.filterTab]) {
+      handleActiveFilterTab(decalType.filterTab);
+    }
   }
 
-  const readFile = async (type: string) => {
+  const readFile = async (type: DecalKey) => {
     reader(file)
 
     const result = await reader(file)
@@ -79,7 +74,7 @@ const Customizer = () => {
     setActiveEditTab("")
   }
 
-  const handleActiveFilterTab = (tabName: string) => {
+  const handleActiveFilterTab = (tabName: FilterKey) => {
     switch (tabName) {
       case "logoShirt":
         state.isLogoTexture = !activeFilterTab["logoShirt"];

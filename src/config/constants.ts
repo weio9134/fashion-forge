@@ -13,7 +13,7 @@ export const EditorTabs = [
     name: "aipicker",
     icon: ai,
   },
-];
+]
 
 export const FilterTabs = [
   {
@@ -24,7 +24,7 @@ export const FilterTabs = [
     name: "stylishShirt",
     icon: stylishShirt,
   },
-];
+] as const
 
 export const DecalTypes = {
   logo: {
@@ -35,4 +35,7 @@ export const DecalTypes = {
     stateProperty: "fullDecal",
     filterTab: "stylishShirt",
   },
-};
+} as const
+
+export type DecalKey = keyof typeof DecalTypes
+export type FilterKey = typeof FilterTabs[number]['name']
