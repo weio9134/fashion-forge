@@ -10,8 +10,8 @@ export const downloadCanvasToImage = () => {
   document.body.removeChild(link);
 };
 
-export const reader = (file) =>
-  new Promise((resolve, reject) => {
+export const reader = async (file) => {
+  return await new Promise((resolve, reject) => {
     try {
       const fileReader = new FileReader();
       fileReader.onload = () => resolve(fileReader.result);
@@ -19,7 +19,8 @@ export const reader = (file) =>
     } catch (error) {
       console.log("error upload files")
     }
-  });
+  })
+}
 
 export const getContrastingColor = (color) => {
   // Remove the '#' character if it exists

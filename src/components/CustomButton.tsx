@@ -6,8 +6,8 @@ import { getContrastingColor } from '@/config/helpers'
 type Props = {
   type: string,
   title: string,
-  handleClick: () => void,
-  styles: string
+  handleClick?: () => void,
+  styles?: string
 }
 
 const CustomButton = ({ type, title, handleClick, styles }: Props) => {
