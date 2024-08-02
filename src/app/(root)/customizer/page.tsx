@@ -13,6 +13,7 @@ import CustomButton from '@/components/CustomButton'
 import CustomTab from '@/components/CustomTab'
 import FilePicker from '@/components/FilePicker'
 import { stylishShirt } from '../../../../public/assets'
+import axios from 'axios'
 
 type DecalProp = { 
   stateProperty: string; 
@@ -37,7 +38,7 @@ const Customizer = () => {
       case "filepicker":
         return <FilePicker file={file} setFile={setFile} readFile={readFile} />
       case "aipicker":
-        return <AIPicker prompt={prompt} setPrompt={setPrompt} generatingImg={generatingImg} handleSubmit={handleSubmit}/>
+        return <AIPicker prompt={prompt} setPrompt={setPrompt} generating={generatingImg} handleSubmit={handleSubmit}/>
       default:
         return null
     }
@@ -49,19 +50,10 @@ const Customizer = () => {
     try {
       setGeneratingImg(true);
 
-      const response = await fetch('http://localhost:8080/api/v1/dalle', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          prompt,
-        })
-      })
+      const response = await axios.post('/api/dalle', { message: prompt })
+      const b64Image = response.data.message
 
-      const data = await response.json();
-
-      handleDecals(type, `data:image/png;base64,${data.photo}`)
+      handleDecals(type, `data:image/png;base64,${b64Image}`)
     } catch (error) {
       alert(error)
     } finally {
@@ -79,21 +71,21 @@ const Customizer = () => {
       handleActiveFilterTab(decalType.filterTab)
   }
 
-  const readFile = (type: string) => {
+  const readFile = async (type: string) => {
     reader(file)
-    .then((result) => {
-      handleDecals(type, result)
-      setActiveEditTab("")
-    })
+
+    const result = await reader(file)
+    handleDecals(type, result)
+    setActiveEditTab("")
   }
 
   const handleActiveFilterTab = (tabName: string) => {
     switch (tabName) {
       case "logoShirt":
-          state.isLogoTexture = !activeFilterTab["logoShirt"];
+        state.isLogoTexture = !activeFilterTab["logoShirt"];
         break;
       case "stylishShirt":
-          state.isFullTexture = !activeFilterTab["stylishShirt"];
+        state.isFullTexture = !activeFilterTab["stylishShirt"];
         break;
       default:
         state.isLogoTexture = true;
@@ -125,7 +117,14 @@ const Customizer = () => {
                   />
                 ))}
 
-                {getTabContent()}
+                <>
+                  {getTabContent()}
+                  { activeEditTab && (
+                    <div onClick={() => setActiveEditTab('')} className='cursor-pointer'> 
+                      Close
+                    </div>
+                  )}
+                </>
               </div>
             </div>
           </motion.div>
