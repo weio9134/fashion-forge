@@ -10,10 +10,10 @@ export async function POST(req: NextRequest) {
     const { message } = await req.json()
 
     const response = await openai.images.generate({
-      model: "dall-e-3",
+      model: "dall-e-2",
       prompt: message,
       n: 1,
-      size: "1024x1024",
+      size: "512x512",
       response_format: 'b64_json'
     })
 
