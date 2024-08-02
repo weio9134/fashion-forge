@@ -11,10 +11,104 @@ import AIPicker from '@/components/AIPicker'
 import ColorPicker from '@/components/ColorPicker'
 import CustomButton from '@/components/CustomButton'
 import CustomTab from '@/components/CustomTab'
-import FilePicker from '@/components/FilePIcker'
+import FilePicker from '@/components/FilePicker'
+import { stylishShirt } from '../../../../public/assets'
+
+type DecalProp = { 
+  stateProperty: string; 
+  filterTab: string;
+}
 
 const Customizer = () => {
   const snap = useSnapshot(state);
+  const [file, setFile] = useState<File | null>(null)
+  const [prompt, setPrompt] = useState('')
+  const [generatingImg, setGeneratingImg] = useState(false)
+  const [activeEditTab, setActiveEditTab] = useState('')
+  const [activeFilterTab, setActiveFilterTab] = useState({
+    logoShirt: true,
+    stylishShirt: false
+  })
+
+  const getTabContent = () => {
+    switch (activeEditTab) {
+      case "colorpicker":
+        return <ColorPicker />
+      case "filepicker":
+        return <FilePicker file={file} setFile={setFile} readFile={readFile} />
+      case "aipicker":
+        return <AIPicker prompt={prompt} setPrompt={setPrompt} generatingImg={generatingImg} handleSubmit={handleSubmit}/>
+      default:
+        return null
+    }
+  }
+
+  const handleSubmit = async (type: string) => {
+    if(!prompt) return alert("Please enter a prompt");
+
+    try {
+      setGeneratingImg(true);
+
+      const response = await fetch('http://localhost:8080/api/v1/dalle', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          prompt,
+        })
+      })
+
+      const data = await response.json();
+
+      handleDecals(type, `data:image/png;base64,${data.photo}`)
+    } catch (error) {
+      alert(error)
+    } finally {
+      setGeneratingImg(false);
+      setActiveEditTab("");
+    }
+  }
+
+  const handleDecals = (type: string, result: any) => {
+    const decalType: DecalProp = DecalTypes[type]
+
+    state[decalType.stateProperty] = result
+
+    if(!activeFilterTab[decalType.filterTab]) 
+      handleActiveFilterTab(decalType.filterTab)
+  }
+
+  const readFile = (type: string) => {
+    reader(file)
+    .then((result) => {
+      handleDecals(type, result)
+      setActiveEditTab("")
+    })
+  }
+
+  const handleActiveFilterTab = (tabName: string) => {
+    switch (tabName) {
+      case "logoShirt":
+          state.isLogoTexture = !activeFilterTab["logoShirt"];
+        break;
+      case "stylishShirt":
+          state.isFullTexture = !activeFilterTab["stylishShirt"];
+        break;
+      default:
+        state.isLogoTexture = true;
+        state.isFullTexture = false;
+        break;
+    }
+
+    setActiveFilterTab((prevState) => {
+      return {
+        ...prevState,
+        [tabName]: !prevState[tabName]
+      }
+    })
+  }
+
   return (
     <AnimatePresence>
       { !snap.intro && (
@@ -27,9 +121,11 @@ const Customizer = () => {
                   <CustomTab
                     key={tab.name}
                     tab={tab}
-                    handleClick={() => {}}
+                    handleClick={() => setActiveEditTab(tab.name)}
                   />
                 ))}
+
+                {getTabContent()}
               </div>
             </div>
           </motion.div>
@@ -49,9 +145,9 @@ const Customizer = () => {
               <CustomTab
                 key={tab.name}
                 tab={tab}
-                handleClick={() => {}}
+                handleClick={() => handleActiveFilterTab(tab.name)}
                 isFilterTab={true}
-                isActivetab={false}
+                isActivetab={activeFilterTab[tab.name]}
               />
             ))}
           </motion.div>
