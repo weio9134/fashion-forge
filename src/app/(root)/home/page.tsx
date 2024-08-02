@@ -28,12 +28,12 @@ const Home = () => {
           <motion.div className='home-content' {...headContainerAnimation}>
             <motion.div {...headTextAnimation}>
               <h1 className="head-text">
-                Let's <br className='xl:block hidden'/> do it!
+                Let's <br className='lg:block hidden'/> do it!
               </h1>
             </motion.div>
 
             <motion.div {...headContentAnimation} className='flex flex-col gap-5'>
-              <p className='max-w-md font-normal text-gray-600 text-base'>
+              <p className='max-w-md font-normal text-gray-700 text-base'>
                 <strong>Create, visualize, and perfect</strong> your unique style effortlessly!
                 Experience the future of fashion design with cutting-edge AI and Three.js technology, 
                 bringing your custom shirt designs to life in stunning 3D detail.

@@ -1,8 +1,13 @@
 import React from 'react'
 
-type Props = {}
+type Props = {
+  prompt: string,
+  setPrompt: React.Dispatch<React.SetStateAction<string>>,
+  generatingImg: boolean,
+  handleSubmit: (val: string) => void
+}
 
-const AIPicker = (props: Props) => {
+const AIPicker = ({ prompt, setPrompt, generatingImg, handleSubmit }: Props) => {
   return (
     <div>AIPicker</div>
   )

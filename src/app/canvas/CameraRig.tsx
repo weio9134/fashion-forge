@@ -7,7 +7,7 @@ import * as THREE from 'three'
 import state from '@/store'
 
 type Props = {
-  children: JSX.Element[]
+  children: JSX.Element | JSX.Element[]
 }
 
 const CameraRig = ({ children }: Props) => {
@@ -15,15 +15,15 @@ const CameraRig = ({ children }: Props) => {
   const group = useRef<THREE.Group>(null!)
 
   useFrame((frameState, delta) => {
-    const isBreakpoint = window.innerWidth <= 1280
-    const isMobile = window.innerWidth <= 640
+    const isXL = window.innerWidth <= 1280
+    const isMobile = window.innerWidth <= 1024
 
     let targetPosition = new THREE.Vector3(-0.4, 0, 2)
-    if (snap.intro) {
-      if (isBreakpoint) targetPosition.set(0, 0, 2)
-      if (isMobile) targetPosition.set(0, 0.2, 2.5)
+    if(snap.intro) {
+      if(isXL) targetPosition.set(-0.25, 0, 2)
+      if(isMobile) targetPosition.set(0, 0.2, 2.5)
     } else {
-      if (isMobile) targetPosition.set(0, 0, 2.5)
+      if(isMobile) targetPosition.set(0, 0, 2.5)
       else targetPosition.set(0, 0, 2)
     }
 

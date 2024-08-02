@@ -1,7 +1,7 @@
-"use client"
 import state from '@/store'
 import React from 'react'
 import { useSnapshot } from 'valtio'
+import { getContrastingColor } from '@/config/helpers'
 
 type Props = {
   type: string,
@@ -13,10 +13,17 @@ type Props = {
 const CustomButton = ({ type, title, handleClick, styles }: Props) => {
   const snap = useSnapshot(state)
   const getStyle = () => {
-    if(type === 'filled') return {
-      backgroundColor: snap.color,
-      color: '#fff'
-    }
+    if(type === 'filled') 
+      return {
+        backgroundColor: snap.color,
+        color: getContrastingColor(snap.color)
+      }
+    else 
+      return {
+        borderWidth: '1px',
+        borderColor: snap.color,
+        color: snap.color
+      }
   }
 
   return (
