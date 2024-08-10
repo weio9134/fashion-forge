@@ -16,7 +16,7 @@ const Home = () => {
         <motion.section className='home' {...slideAnimation('left')} id="home">
           <motion.header {...slideAnimation('down')}>
             <Image
-              src={'/threejs.png'}
+              src={'/personal_logo.png'}
               alt={'logo'}
               width={32}
               height={32}
@@ -28,7 +28,7 @@ const Home = () => {
           <motion.div className='home-content' {...headContainerAnimation}>
             <motion.div {...headTextAnimation}>
               <h1 className="head-text">
-                Let's <br className='lg:block hidden'/> do it!
+                Let's <br className='lg:block hidden'/> design!
               </h1>
             </motion.div>
 

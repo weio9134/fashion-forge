@@ -14,8 +14,8 @@ const initValue: StateProp = {
   color: '#4F7EC4',
   isLogoTexture: true,
   isFullTexture: false,
-  logoDecal: '/threejs.png',
-  fullDecal: '/threejs.png',
+  logoDecal: '/personal_logo.png',
+  fullDecal: '/personal_logo.png',
 }
 
 const state = proxy(initValue)
